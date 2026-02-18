@@ -47,23 +47,21 @@ const AmbulanceJobs = {
 }
 
 const DojJobs = {
-  ['lawyer']: true,
-  ['judge']: true
 }
 
 const MONTH_NAMES = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
+  "januar",
+  "februar",
+  "mars",
+  "april",
+  "mai",
+  "juni",
+  "juli",
+  "august",
+  "september",
+  "oktober",
+  "november",
+  "desember",
 ];
 
 function getFormattedDate(date, prefomattedDate = false, hideYear = false) {
@@ -78,14 +76,14 @@ function getFormattedDate(date, prefomattedDate = false, hideYear = false) {
   }
 
   if (prefomattedDate) {
-    return `${prefomattedDate} at ${hours}:${minutes}`;
+    return `${prefomattedDate} kl. ${hours}:${minutes}`;
   }
 
   if (hideYear) {
-    return `${day}. ${month} at ${hours}:${minutes}`;
+    return `${day}. ${month} kl. ${hours}:${minutes}`;
   }
 
-  return `${day}. ${month} ${year}. at ${hours}:${minutes}`;
+  return `${day}. ${month} ${year}. kl. ${hours}:${minutes}`;
 }
 
 var quotes = [
@@ -136,17 +134,17 @@ function timeAgo(dateParam) {
   const isThisYear = today.getFullYear() === date.getFullYear();
 
   if (seconds < 5) {
-    return "Just Now";
+    return "Akkurat nå";
   } else if (seconds < 60) {
-    return `${seconds} Seconds ago`;
+    return `${seconds} sekunder siden`;
   } else if (seconds < 90) {
-    return "About a minute ago";
+    return "For omtrent ett minutt siden";
   } else if (minutes < 60) {
-    return `${minutes} Minutes ago`;
+    return `${minutes} minutter siden`;
   } else if (isToday) {
-    return getFormattedDate(date, "Today");
+    return getFormattedDate(date, "I dag");
   } else if (isYesterday) {
-    return getFormattedDate(date, "Yesterday");
+    return getFormattedDate(date, "I går");
   } else if (isThisYear) {
     return getFormattedDate(date, false, true);
   }
@@ -232,7 +230,7 @@ $(document).ready(() => {
 
     const { vehicles, tags, gallery, convictions, incidents, properties, fingerprint } = result;
 
-    $(".manage-profile-editing-title").html(`You are currently editing ${result["firstname"]} ${result["lastname"]}`);
+    $(".manage-profile-editing-title").html(`Du redigerer: ${result["firstname"]} ${result["lastname"]}`);
     $(".manage-profile-citizenid-input").val(result['cid']);
     $(".manage-profile-name-input-1").val(result["firstname"]);
     $(".manage-profile-name-input-2").val(result["lastname"]);
@@ -256,13 +254,13 @@ $(document).ready(() => {
     $(".convictions-holder").empty();
     $(".profile-incidents-holder").empty();
 
-    let licencesHTML = '<div style="color: #fff; text-align:center;">No Licenses</div>';
-    let tagsHTML = '<div style="color: #fff; text-align:center;">No Tags</div>';
-    let convHTML = '<div style="color: #fff; text-align:center;">Clean Record</div>';
-    let incidentsHTML = '<div style="color: #fff; text-align:center;">No Incidents</div>';
-    let vehHTML = '<div style="color: #fff; text-align:center;">No Vehicles</div>';
-    let galleryHTML = '<div style="color: #fff; text-align:center;">No Photos</div>';
-    let propertyHTML = '<div style="color: #fff; text-align:center;">No Properties</div>';
+    let licencesHTML = '<div style="color: #fff; text-align:center;">Ingen lisenser</div>';
+    let tagsHTML = '<div style="color: #fff; text-align:center;">Ingen merkelapper</div>';
+    let convHTML = '<div style="color: #fff; text-align:center;">Ren journal</div>';
+    let incidentsHTML = '<div style="color: #fff; text-align:center;">Ingen hendelser</div>';
+    let vehHTML = '<div style="color: #fff; text-align:center;">Ingen kjøretøy</div>';
+    let galleryHTML = '<div style="color: #fff; text-align:center;">Ingen bilder</div>';
+    let propertyHTML = '<div style="color: #fff; text-align:center;">Ingen eiendommer</div>';
 
     // convert key value pair object of licenses to array
     let licenses = Object.entries(result.licences);
@@ -272,7 +270,7 @@ $(document).ready(() => {
       licenses = Object.entries(licenseTypes.reduce((licenseType, licenseValue) => (licenseType[licenseValue] = false, licenseType), {}));
     }
 
-    if (licenses.length > 0 && (PoliceJobs[playerJob] !== undefined || DojJobs[playerJob] !== undefined)) {
+    if (licenses.length > 0 && (PoliceJobs[playerJob] !== undefined || AmbulanceJobs[playerJob] !== undefined)) {
       licencesHTML = '';
       for (const [lic, hasLic] of licenses) {
         let tagColour = hasLic == true ? "green-tag" : "red-tag";
@@ -364,7 +362,7 @@ $(document).ready(() => {
                 <span contenteditable="true" class="bulletin-item-title"></span>
                 <span contenteditable="true" class="bulletin-item-info"></span>
                 <div class="bulletin-bottom-info">
-                <div class="bulletin-date">${MyName} - Just Now</div>
+                <div class="bulletin-date">${MyName} - Akkurat nå</div>
                 </div>
             </div>`);
     } else {
@@ -417,7 +415,7 @@ $(document).ready(() => {
         {
           className: "remove-bulletin",
           icon: "fas fa-times",
-          text: "Remove Item",
+          text: "Fjern element",
           info: $(this).data("id"),
           status: $(this).data("title"),
         },
