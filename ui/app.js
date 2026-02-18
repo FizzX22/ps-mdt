@@ -165,7 +165,11 @@ function closeContainer(selector) {
 $(document).ready(() => {
   // entrance animations: reveal body and stagger nav items
   try {
-    $('body').fadeIn(220);
+    // Don't auto-show the UI when the resource loads. The NUI should only
+    // become visible when the client explicitly opens the MDT (via
+    // SendNUIMessage from the game). Removing the automatic fade-in prevents
+    // the NUI from capturing everyone's screen on resource start.
+    // $('body').fadeIn(220);
     $('.nav-item').each((i, el) => setTimeout(() => $(el).addClass('nav-loaded'), 60 * i));
     setTimeout(() => {
       $('.dispatch-container, .quotes-container, .warrants-container, .bulletin-container').addClass('animate-fadeup');
