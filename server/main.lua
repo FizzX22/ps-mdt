@@ -362,6 +362,32 @@ RegisterNetEvent('mdt:server:NewBulletin', function(title, info, time)
 	TriggerClientEvent('mdt:client:newBulletin', -1, src, {id = newBulletin, title = title, info = info, time = time, author = PlayerData.CitizenId}, JobType)
 end)
 
+-- Broadcast dispatch chat messages to all players (only police/ems allowed to send)
+RegisterNetEvent('mdt:server:sendDispatchChat', function(message)
+	local src = source
+	local PlayerData = GetPlayerData(src)
+	if not PlayerData or not PlayerData.job then return end
+	if not IsPoliceOrEms(PlayerData.job.name) then return end
+
+	local callSign = PlayerData.metadata and PlayerData.metadata.callsign or ''
+	local firstName = PlayerData.charinfo.firstname:sub(1,1):upper()..PlayerData.charinfo.firstname:sub(2)
+	local lastName = PlayerData.charinfo.lastname:sub(1,1):upper()..PlayerData.charinfo.lastname:sub(2)
+	local displayName = firstName .. ' ' .. lastName
+
+	local prefix = '[CAD]'
+	local payload = ('[%s] %s: %s'):format(callSign, displayName, message)
+
+	-- Send to chat with an accent color to indicate comes from CAD
+	TriggerClientEvent('chat:addMessage', -1, {
+		color = {255, 140, 0},
+		multiline = true,
+		args = { prefix, payload }
+	})
+
+	-- Also log locally
+	AddLog(('Dispatch Chat from %s (%s): %s'):format(displayName, callSign, message))
+end)
+
 RegisterNetEvent('mdt:server:deleteBulletin', function(id, title)
 	if not id then return false end
 	local src = source

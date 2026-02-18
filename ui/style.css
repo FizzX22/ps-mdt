@@ -177,6 +177,52 @@ input::-webkit-inner-spin-button {
     user-select: none;
 }
 
+/* Small UI improvements & animations */
+.nav-item {
+    transform: translateX(-10px);
+    opacity: 0;
+    transition: transform .22s ease, opacity .22s ease, background-color .18s ease, box-shadow .18s ease;
+}
+.nav-item.nav-loaded {
+    transform: translateX(0);
+    opacity: 1;
+}
+.nav-item:hover {
+    transform: translateX(6px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.55);
+}
+.nav-item.nav-clicked { transform: scale(0.985); }
+
+.header { transition: box-shadow .2s ease, transform .18s ease; }
+.header:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.6); transform: translateY(-2px); }
+
+.badge-logo { transition: transform .28s ease; }
+.badge-logo:hover { transform: rotate(-6deg) scale(1.03); }
+
+.gallery-img { transition: transform .18s ease, box-shadow .18s ease; cursor: pointer; }
+.gallery-img:hover { transform: scale(1.06); box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+
+.bulletin-item, .warrants-item, .active-calls-item, .dispatch-items .dispatch-item {
+    transition: transform .16s ease, box-shadow .16s ease;
+}
+.bulletin-item:hover, .warrants-item:hover, .active-calls-item:hover, .dispatch-items .dispatch-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.45);
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeup { animation: fadeUp .36s ease both; }
+
+.nav-menu { will-change: transform; }
+.close-all { transition: opacity .22s ease, transform .2s ease; }
+
+/* small accent: subtle focus outline for inputs for accessibility */
+input:focus, textarea:focus { outline: 2px solid rgba(255,255,255,0.08); box-shadow: 0 4px 14px rgba(0,0,0,0.6) inset; }
+
+
 .header-left {
     display: flex;
     flex-direction: column;

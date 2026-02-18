@@ -163,6 +163,16 @@ function closeContainer(selector) {
 }
 
 $(document).ready(() => {
+  // entrance animations: reveal body and stagger nav items
+  try {
+    $('body').fadeIn(220);
+    $('.nav-item').each((i, el) => setTimeout(() => $(el).addClass('nav-loaded'), 60 * i));
+    setTimeout(() => {
+      $('.dispatch-container, .quotes-container, .warrants-container, .bulletin-container').addClass('animate-fadeup');
+    }, 320);
+  } catch (e) {
+    // ignore if jQuery not ready yet
+  }
   $(".header").hover(
     function () {
       $(".close-all").css("opacity", "0.5");
@@ -182,6 +192,9 @@ $(document).ready(() => {
     }
   );
   $(".nav-item").click(function () {
+    // small click feedback + navigation
+    $(this).addClass('nav-clicked');
+    setTimeout(() => $(this).removeClass('nav-clicked'), 180);
     if ($(this).hasClass("active-nav") == false) {
       fidgetSpinner($(this).data("page"));
       currentTab = $(this).data("page");
@@ -423,6 +436,18 @@ $(document).ready(() => {
       openContextMenu(e, args);
     }
   );
+
+  // Dispatch input - send message to client Lua which will forward to server
+  $(document).on('keydown', '.dispatch-input', function(e) {
+    if (e.keyCode === 13 && !e.shiftKey) {
+      e.preventDefault();
+      const message = $(this).val().trim();
+      if (message && message.length > 0) {
+        $.post(`https://${GetParentResourceName()}/sendDispatch`, JSON.stringify({ msg: message }));
+        $(this).val('');
+      }
+    }
+  });
   $(".contextmenu").on("click", ".remove-bulletin", function () {
     let id = $(this).data("info");
     let title = $(this).data("status")

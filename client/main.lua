@@ -200,6 +200,22 @@ RegisterNUICallback('escape', function(data, cb)
     cb(true)
 end)
 
+-- Receive dispatch messages from NUI and forward to server
+RegisterNUICallback('sendDispatch', function(data, cb)
+    local src = source
+    local PlayerData = QBCore.Functions.GetPlayerData()
+    if not PlayerData or not PlayerData.job then cb(false) return end
+    -- only allow police or ambulance to send
+    if not (PlayerData.job.name == 'police' or PlayerData.job.name == 'ambulance' or PlayerData.job.type == 'leo' or PlayerData.job.type == 'ems') then
+        cb(false)
+        return
+    end
+    local msg = tostring(data.msg or '')
+    if msg == '' then cb(false) return end
+    TriggerServerEvent('mdt:server:sendDispatchChat', msg)
+    cb(true)
+end)
+
 RegisterNetEvent('mdt:client:dashboardbulletin', function(sentData)
     SendNUIMessage({ type = "bulletin", data = sentData })
 end)
